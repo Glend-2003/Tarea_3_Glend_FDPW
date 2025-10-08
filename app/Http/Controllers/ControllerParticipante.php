@@ -28,29 +28,35 @@ class ControllerParticipante extends Controller
      /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        // Validación con correo único
-        $validated = $request->validate([
-            'nombre_participante' => 'required|string|max:255',
-            'telefono' => 'required|string|max:20',
-            'correo_electronico' => 'required|email|unique:participante,correo_electronico',
-            'ponente' => 'required|boolean'
-        ], [
-            'correo_electronico.unique' => 'El correo electrónico ya está registrado.',
-            'correo_electronico.required' => 'El correo electrónico es obligatorio.',
-            'correo_electronico.email' => 'Debe ingresar un correo válido.',
-            'nombre_participante.required' => 'El nombre es obligatorio.',
-            'telefono.required' => 'El teléfono es obligatorio.',
-            'ponente.required' => 'Debe seleccionar el tipo de participación.'
-        ]);
-
-        Participante::create($validated);
-
-        return redirect()->route('participantes.index')
-                        ->with('success', 'Participante registrado exitosamente.');
+public function store(Request $request)
+{
+    $correoExiste = Participante::where('correo_electronico', $request->correo_electronico)->exists();
+    
+    if ($correoExiste) {
+        $exito = false;
+        $error = 'El correo electrónico ya está registrado en el sistema.';
+        return view('participantes.resultado', compact('exito', 'error'));
     }
-
+    
+    $validated = $request->validate([
+        'nombre_participante' => 'required|string|max:255',
+        'telefono' => 'required|string|max:20',
+        'correo_electronico' => 'required|email',
+        'ponente' => 'required|boolean'
+    ]);
+    
+    try {
+        Participante::create($validated);
+        
+        $exito = true;
+        return view('participantes.resultado', compact('exito'));
+        
+    } catch (\Exception $e) {
+        $exito = false;
+        $error = 'Error al guardar: ' . $e->getMessage();
+        return view('participantes.resultado', compact('exito', 'error'));
+    }
+}
    
   
 

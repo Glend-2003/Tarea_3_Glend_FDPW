@@ -44,7 +44,6 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <a href="#" class="btn btn-sm btn-info">Ver</a>
                                             <a href="{{ route('participantes.edit', $item) }}"
                                                 class="btn btn-sm btn-warning">Editar</a>
                                             <form action="{{ route('participantes.destroy', $item) }}" method="POST"

@@ -20,18 +20,6 @@
                             </h3>
                         </div>
                         <div class="card-body p-4">
-                            
-                            <!-- Mostrar errores de validación -->
-                            @if($errors->any())
-                                <div class="alert alert-danger">
-                                    <strong><i class="fas fa-exclamation-triangle me-2"></i>Error:</strong>
-                                    <ul class="mb-0 mt-2">
-                                        @foreach($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
 
                             <form action="{{route('participantes.store')}}" method="POST">
                                 @csrf
